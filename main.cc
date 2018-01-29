@@ -34,10 +34,10 @@ int main(int argc, char** argv) {
 
 
 	// Example in Fig 1: (a UNION b) EXCEPT c
-	SetOperations setOpsAB = SetOperations(a, b, setUnion, 1, 1);
+	SetOperations setOpsAB = SetOperations(a, b, SET_UNION, 1, 1);
 	setOpsAB.setUnion(a, b);
 	Relation intermediate(setOpsAB.output);
-	SetOperations setOpsIC = SetOperations(c,intermediate,setDifference, 1, 0);
+	SetOperations setOpsIC = SetOperations(c,intermediate,SET_DIFFERENCE, 1, 0);
 	setOpsIC.setDifference(c,intermediate);
 
 	cout << "Output (a UNION b) EXCEPT c: " << setOpsIC.output.size() << " tuples" << endl;
