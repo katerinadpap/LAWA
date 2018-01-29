@@ -1,10 +1,3 @@
-/*
- * operations.h
- *
- *  Created on: 2 Apr 2017
- *      Author: katerina
- */
-
 #ifndef OPERATORS_H_
 #define OPERATORS_H_
 
@@ -16,4 +9,4 @@ enum OPERATORS {
 
 
 
-#endif /* OPERATORS_H_ */
+#endif

@@ -34,11 +34,11 @@ int main(int argc, char** argv) {
 
 
 	// Example in Fig 1: (a UNION b) EXCEPT c
-	SetOperations setOpsAB = SetOperations(a, b, SET_UNION, 1, 1);
-	setOpsAB.set_union(a, b);
+	SetOperations setOpsAB = SetOperations(a, b, setUnion, 1, 1);
+	setOpsAB.setUnion(a, b);
 	Relation intermediate(setOpsAB.output);
-	SetOperations setOpsIC = SetOperations(c,intermediate,SET_DIFFERENCE, 1, 0);
-	setOpsIC.set_difference(c,intermediate);
+	SetOperations setOpsIC = SetOperations(c,intermediate,setDifference, 1, 0);
+	setOpsIC.setDifference(c,intermediate);
 
 	cout << "Output (a UNION b) EXCEPT c: " << setOpsIC.output.size() << " tuples" << endl;
 	for (const auto& t : setOpsIC.output) {
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
 	// Fig 3: a UNION c
 	SetOperations setOpsACunion = SetOperations(a, c, SET_UNION, 1, 1);
-	setOpsACunion.set_union(a, c);
+	setOpsACunion.setUnion(a, c);
 	cout << "Output a UNION c: " << setOpsACunion.output.size() << " tuples" << endl;
 	for (const auto& t : setOpsACunion.output) {
 		t.printTuple();
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 
 	// Fig 3: a INTERSECT c
 	SetOperations setOpsACintersect = SetOperations(a, c, SET_INTERSECTION, 1, 1);
-	setOpsACintersect.set_intersection(a, c);
+	setOpsACintersect.setIntersection(a, c);
 	cout << "Output a INTERSECT c: " << setOpsACintersect.output.size() << " tuples" << endl;
 	for (const auto& t : setOpsACintersect.output) {
 		t.printTuple();
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 
 	// Fig 3: a EXCEPT c
 	SetOperations setOpsACdifference = SetOperations(a, c, SET_DIFFERENCE, 1, 1);
-	setOpsACdifference.set_difference(a, c);
+	setOpsACdifference.setDifference(a, c);
 	cout << "Output a EXCEPT c: " << setOpsACdifference.output.size() << " tuples" << endl;
 	for (const auto& t : setOpsACdifference.output) {
 		t.printTuple();

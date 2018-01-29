@@ -1,5 +1,5 @@
 /*
- * Tuple_Ts_Comparator.h
+ * TupleTsComparator.h
  *
  *  Created on: 2 Apr 2017
  *      Author: katerina
@@ -19,12 +19,12 @@
 using namespace std;
 
 
-class Tuple_Ts_Comparator {
+class TupleTsComparator {
 
 public:
 	vector<int> sorting_attributes;
 
-	Tuple_Ts_Comparator(const vector<int>& attribute_positions) {
+	TupleTsComparator(const vector<int>& attribute_positions) {
 		sorting_attributes = attribute_positions;
 	}
 
@@ -48,4 +48,4 @@ public:
 
 };
 
-#endif /* RELATION_SORTING_H_ */
+#endif

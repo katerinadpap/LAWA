@@ -9,8 +9,8 @@
 #include <list>
 
 #include "Lawa.h"
-#include "Tuple_Ts_Comparator.h"
-#include "Tuple_Te_Comparator.h"
+#include "TupleTsComparator.h"
+#include "TupleTeComparator.h"
 #include "Tuple.h"
 #include "Relation.h"
 #include "LineageAwareTemporalWindow.h"
@@ -39,18 +39,18 @@ public:
 		baseRight = rightIsBase;
 	}
 
-	void set_union(Relation r, Relation s) {
+	void setUnion(Relation r, Relation s) {
 
 		// Sort Tuples in R By Ts
-		Tuple_Ts_Comparator sort_comp(vector<int> { 0, 1 });
+		TupleTsComparator sort_comp(vector<int> { 0, 1 });
 		sort(r.tuples.begin(), r.tuples.end(), sort_comp);
 
 		// Sort Tuples in S By Ts
 		sort(s.tuples.begin(), s.tuples.end(), sort_comp);
 
 		LineageAwareTemporalWindow w;
-		while (it.sTuples_Index < it.sTuples.size()
-				|| it.rTuples_Index < it.rTuples.size()) {
+		while (it.sTuplesIndex < it.sTuples.size()
+				|| it.rTuplesIndex < it.rTuples.size()) {
 
 			w = it.main_lawa();
 
@@ -60,7 +60,7 @@ public:
 			}
 		}
 
-		if (it.valid_rTuple_pos != -1 || it.valid_sTuple_pos != -1) {
+		if (it.validRtuplePos != -1 || it.validStuplePos != -1) {
 			w = it.main_lawa();
 			Tuple t(w,lor, baseLeft, baseRight);
 			output.push_back(t);
@@ -68,17 +68,17 @@ public:
 
 	}
 
-	void set_difference(Relation r, Relation s) {
+	void setDifference(Relation r, Relation s) {
 
 		// Sort Tuples in R By Ts
-		Tuple_Ts_Comparator sort_comp(vector<int> { 0, 1 });
+		TupleTsComparator sort_comp(vector<int> { 0, 1 });
 		sort(r.tuples.begin(), r.tuples.end(), sort_comp);
 
 		// Sort Tuples in S By Ts
 		sort(s.tuples.begin(), s.tuples.end(), sort_comp);
 
 		LineageAwareTemporalWindow w;
-		while (it.rTuples_Index < it.rTuples.size()) {
+		while (it.rTuplesIndex < it.rTuples.size()) {
 			w = it.main_lawa();
 			if (w.lambda_r.compare("") != 0) {
 				Tuple t(w,landNot, baseLeft, baseRight);
@@ -86,25 +86,25 @@ public:
 			}
 		}
 
-		if (it.valid_rTuple_pos != -1) {
+		if (it.validRtuplePos != -1) {
 			w = it.main_lawa();
 			Tuple t(w,landNot, baseLeft, baseRight);
 			output.push_back(t);
 		}
 	}
 
-	void set_intersection(Relation r, Relation s) {
+	void setIntersection(Relation r, Relation s) {
 
 		// Sort Tuples in R By Ts
-		Tuple_Ts_Comparator sort_comp(vector<int> { 0, 1 });
+		TupleTsComparator sort_comp(vector<int> { 0, 1 });
 		sort(r.tuples.begin(), r.tuples.end(), sort_comp);
 
 		// Sort Tuples in S By Ts
 		sort(s.tuples.begin(), s.tuples.end(), sort_comp);
 
 		LineageAwareTemporalWindow w;
-		while (it.sTuples_Index < it.sTuples.size()
-				&& it.rTuples_Index < it.rTuples.size()) {
+		while (it.sTuplesIndex < it.sTuples.size()
+				&& it.rTuplesIndex < it.rTuples.size()) {
 
 			w = it.main_lawa();
 

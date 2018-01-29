@@ -14,8 +14,8 @@
 #include <queue>
 
 #include "LineageAwareTemporalWindow.h"
-#include "Tuple_Ts_Comparator.h"
-#include "Tuple_Te_Comparator.h"
+#include "TupleTsComparator.h"
+#include "TupleTeComparator.h"
 
 using namespace std;
 
@@ -25,26 +25,26 @@ public:
 
 	vector<Tuple> rTuples;
 	vector<Tuple> sTuples;
-	long long rTuples_Index;
-	long long sTuples_Index;
+	long long rTuplesIndex;
+	long long sTuplesIndex;
 
 	long long currFact;
 	long long prevWindTe;
-	int valid_rTuple_pos;
-	int valid_sTuple_pos;
+	int validRtuplePos;
+	int validStuplePos;
 
 	Lawa(const vector<Tuple>& TuplesOFr,
 			const vector<Tuple>& TuplesOFs) {
 
 		rTuples = TuplesOFr;
 		sTuples = TuplesOFs;
-		rTuples_Index = 0;
-		sTuples_Index = 0;
+		rTuplesIndex = 0;
+		sTuplesIndex = 0;
 
 		currFact = -1;
 		prevWindTe = -1;
-		valid_rTuple_pos = -1;
-		valid_sTuple_pos = -1;
+		validRtuplePos = -1;
+		validStuplePos = -1;
 
 		cout << "Lawa Initialized" << endl;
 	}
@@ -69,42 +69,42 @@ public:
 		LineageAwareTemporalWindow outputWindow = LineageAwareTemporalWindow();
 
 		// Determine the win_Ts
-		if (valid_rTuple_pos == -1 && valid_sTuple_pos == -1) {
+		if (validRtuplePos == -1 && validStuplePos == -1) {
 
 			// No more tuples from r - Only work with tuples from s
-			if (rTuples_Index == rTuples.size()
-					&& sTuples_Index < sTuples.size()) {
-				outputWindow.wind_Ts = sTuples[sTuples_Index].ts;
-				currFact = sTuples[sTuples_Index].fact;
+			if (rTuplesIndex == rTuples.size()
+					&& sTuplesIndex < sTuples.size()) {
+				outputWindow.wind_Ts = sTuples[sTuplesIndex].ts;
+				currFact = sTuples[sTuplesIndex].fact;
 			}
 			// No more tuples from s - Only work with tuples from r
-			else if (rTuples_Index < rTuples.size()
-					&& sTuples_Index == sTuples.size()) {
-				outputWindow.wind_Ts = rTuples[rTuples_Index].ts;
-				currFact = rTuples[rTuples_Index].fact;
+			else if (rTuplesIndex < rTuples.size()
+					&& sTuplesIndex == sTuples.size()) {
+				outputWindow.wind_Ts = rTuples[rTuplesIndex].ts;
+				currFact = rTuples[rTuplesIndex].fact;
 			}
 			// There are tuples in both relations (They can't be empty because this was checked before this function was called)
 			else {
-				if (rTuples[rTuples_Index].fact == currFact
-						&& sTuples[sTuples_Index].fact != currFact) {
-					outputWindow.wind_Ts = rTuples[rTuples_Index].ts;
+				if (rTuples[rTuplesIndex].fact == currFact
+						&& sTuples[sTuplesIndex].fact != currFact) {
+					outputWindow.wind_Ts = rTuples[rTuplesIndex].ts;
 				}
 				// Time Gap - there are still tuples of s with the same fact as currFact
-				else if (sTuples[sTuples_Index].fact == currFact
-						&& rTuples[rTuples_Index].fact != currFact) {
-					outputWindow.wind_Ts = sTuples[sTuples_Index].ts;
-					currFact = sTuples[sTuples_Index].fact;
+				else if (sTuples[sTuplesIndex].fact == currFact
+						&& rTuples[rTuplesIndex].fact != currFact) {
+					outputWindow.wind_Ts = sTuples[sTuplesIndex].ts;
+					currFact = sTuples[sTuplesIndex].fact;
 				}
 				// Time Gap - there are still tuples of both relations with the same fact as currFact
 				// In this case we choose the one with the smallest ts
 				else {
 
-					if (rTuples[rTuples_Index].ts < sTuples[sTuples_Index].ts) {
-						outputWindow.wind_Ts = rTuples[rTuples_Index].ts;
-						currFact = rTuples[rTuples_Index].fact;
+					if (rTuples[rTuplesIndex].ts < sTuples[sTuplesIndex].ts) {
+						outputWindow.wind_Ts = rTuples[rTuplesIndex].ts;
+						currFact = rTuples[rTuplesIndex].fact;
 					} else {
-						outputWindow.wind_Ts = sTuples[sTuples_Index].ts;
-						currFact = sTuples[sTuples_Index].fact;
+						outputWindow.wind_Ts = sTuples[sTuplesIndex].ts;
+						currFact = sTuples[sTuplesIndex].fact;
 					}
 				}
 			}
@@ -113,17 +113,17 @@ public:
 		}
 
 		// Update rValid, r
-		if (rTuples[rTuples_Index].fact == currFact
-				&& rTuples[rTuples_Index].ts == outputWindow.wind_Ts) {
-			valid_rTuple_pos = rTuples_Index;
-			rTuples_Index++;
+		if (rTuples[rTuplesIndex].fact == currFact
+				&& rTuples[rTuplesIndex].ts == outputWindow.wind_Ts) {
+			validRtuplePos = rTuplesIndex;
+			rTuplesIndex++;
 		}
 
 		// Update sValid, s
-		if (sTuples[sTuples_Index].fact == currFact
-				&& sTuples[sTuples_Index].ts == outputWindow.wind_Ts) {
-			valid_sTuple_pos = sTuples_Index;
-			sTuples_Index++;
+		if (sTuples[sTuplesIndex].fact == currFact
+				&& sTuples[sTuplesIndex].ts == outputWindow.wind_Ts) {
+			validStuplePos = sTuplesIndex;
+			sTuplesIndex++;
 		}
 
 		// Determine the win_Te
@@ -132,19 +132,19 @@ public:
 
 		te_it = Te_candidates.begin();
 
-		if (rTuples_Index <= rTuples.size()
-				&& rTuples[rTuples_Index].fact == currFact) {
-			te_it = Te_candidates.insert(te_it, rTuples[rTuples_Index].ts);
+		if (rTuplesIndex <= rTuples.size()
+				&& rTuples[rTuplesIndex].fact == currFact) {
+			te_it = Te_candidates.insert(te_it, rTuples[rTuplesIndex].ts);
 		}
-		if (sTuples_Index <= sTuples.size()
-				&& sTuples[sTuples_Index].fact == currFact) {
-			te_it = Te_candidates.insert(te_it, sTuples[sTuples_Index].ts);
+		if (sTuplesIndex <= sTuples.size()
+				&& sTuples[sTuplesIndex].fact == currFact) {
+			te_it = Te_candidates.insert(te_it, sTuples[sTuplesIndex].ts);
 		}
-		if (valid_rTuple_pos != -1) {
-			te_it = Te_candidates.insert(te_it, rTuples[valid_rTuple_pos].te);
+		if (validRtuplePos != -1) {
+			te_it = Te_candidates.insert(te_it, rTuples[validRtuplePos].te);
 		}
-		if (valid_sTuple_pos != -1) {
-			te_it = Te_candidates.insert(te_it, sTuples[valid_sTuple_pos].te);
+		if (validStuplePos != -1) {
+			te_it = Te_candidates.insert(te_it, sTuples[validStuplePos].te);
 		}
 
 		outputWindow.wind_Te = minimum_of_candidates(Te_candidates);
@@ -152,21 +152,21 @@ public:
 
 
 		// Assign lambda_r, lambda_s
-		if (valid_rTuple_pos != -1) {
-			outputWindow.lambda_r = string(rTuples[valid_rTuple_pos].lambda);
+		if (validRtuplePos != -1) {
+			outputWindow.lambda_r = string(rTuples[validRtuplePos].lambda);
 		}
-		if (valid_sTuple_pos != -1) {
-			outputWindow.lambda_s = string(sTuples[valid_sTuple_pos].lambda);
+		if (validStuplePos != -1) {
+			outputWindow.lambda_s = string(sTuples[validStuplePos].lambda);
 		}
 
 
 		// Update rValid, sValid, prevWindTe
-		if (valid_rTuple_pos != -1 && rTuples[valid_rTuple_pos].te == outputWindow.wind_Te) {
-			valid_rTuple_pos = -1;
+		if (validRtuplePos != -1 && rTuples[validRtuplePos].te == outputWindow.wind_Te) {
+			validRtuplePos = -1;
 		}
 
-		if (valid_sTuple_pos != -1 && sTuples[valid_sTuple_pos].te == outputWindow.wind_Te) {
-			valid_sTuple_pos = -1;
+		if (validStuplePos != -1 && sTuples[validStuplePos].te == outputWindow.wind_Te) {
+			validStuplePos = -1;
 		}
 
 		prevWindTe = outputWindow.wind_Te;
